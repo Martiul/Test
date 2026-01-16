@@ -12,7 +12,6 @@ steps:
         LABEL build-date=$$BUILD_DATE
         EOF
 
-        echo "Building ${TAG}"
         docker build . -t ${_TAG} --build-arg BUILD_DATE=$$(date +%s)
         docker image list
 
