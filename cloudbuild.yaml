@@ -1,0 +1,28 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    id: Build image
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        set -ex
+        cat > Dockerfile << EOF
+        FROM gcr.io/distroless/static-debian12
+        ARG BUILD_DATE
+        LABEL build-date=$$BUILD_DATE
+        EOF
+
+        echo "Building ${TAG}"
+        docker build . -t ${_TAG} --build-arg BUILD_DATE=$$(date +%s)
+        docker image list
+
+dependencies:
+  - gitSource:
+      repository:
+        url: "${_REPO_URL}"
+      revision: HEAD
+      destPath: "."
+
+images:
+  ['${_TAG}']
+    
